@@ -1,6 +1,7 @@
 import argparse
 import xml.etree.ElementTree as ET
 from io import StringIO
+from pathlib import Path
 
 import requests
 
@@ -23,19 +24,20 @@ def url_pdf(id):
 
 def save_pdf(title,id):
     res = requests.get(url_pdf(id))
-    with open(f"~/Documents/arxiv/{title}.pdf", "wb") as f:
+    path = Path.home() / "Documents" / "arxiv" / f"{title}.pdf"
+    with path.open("ab") as f:
         f.write(res.content)
 
 def save(id=None):
     if id is None:
         parser = argparse.ArgumentParser()
-        parser.add_argument("--id", type=str)
+        parser.add_argument("id", type=str)
         args = parser.parse_args()
         id = args.id
 
     tree = get_et(query_article(id))
     title = tree.find("entry").find("title").text
 
-    save_pdf(title.replace(" ", "-").replace("\n","").lower(),id)
+    save_pdf(title.replace(" ", "-").replace("\n","").replace("--", "-").lower(),id)
 
 
