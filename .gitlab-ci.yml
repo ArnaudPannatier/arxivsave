@@ -1,0 +1,10 @@
+variables:
+  CONDA_ROOT: "/idiap/user/apannatier/miniconda3"
+
+before_script:
+  - source ${CONDA_ROOT}/etc/profile.d/conda.sh
+  - conda activate arxiv
+
+test:
+  script:
+    - python3 -m pytest
